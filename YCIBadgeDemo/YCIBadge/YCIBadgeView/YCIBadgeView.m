@@ -10,6 +10,12 @@
 #import <QuartzCore/QuartzCore.h>
 
 const static CGFloat animationDuration = 0.2;
+const static NSInteger maxNum = 99;
+
+@interface YCIBadgeView ()
+@property (nonatomic, strong) NSString *text;
+
+@end
 
 @implementation YCIBadgeView
 {
@@ -61,7 +67,7 @@ const static CGFloat animationDuration = 0.2;
                            roundf(((self.frame.size.height - _font.lineHeight) / 2) / roundScale) * roundScale,
                            self.frame.size.width,
                            _font.lineHeight);
-    NSLog(@"%@",NSStringFromCGRect(self.frame));
+    
     _textLayer.frame       = textFrame;
     _backgroundLayer.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
     
@@ -76,15 +82,15 @@ const static CGFloat animationDuration = 0.2;
 
 //配置默认数据
 - (void)configureDefaultData{
-
+    
     _textColor = [UIColor whiteColor];
-    _font      = [UIFont systemFontOfSize:16.0f];
+    _font      = [UIFont systemFontOfSize:11.0f];
     _badgeBackgroundColor = [UIColor redColor];
     _cornerRadius  = self.frame.size.height/2;
     _hidesWhenZero = YES;
     
-    self.frame    = CGRectMake(0, 0, 24, 24);
-
+    self.frame    = CGRectMake(0, 0, 16, 16);
+    
     _maximumWidth = CGFLOAT_MAX;
     
 }
@@ -126,7 +132,7 @@ const static CGFloat animationDuration = 0.2;
 - (void)adjustBadgeFrame{
     
     CGRect frame     = self.frame;
-
+    
     frame.size.width = [self sizeForString:_text].width;
     
     if (frame.size.width < frame.size.height) {
@@ -139,7 +145,7 @@ const static CGFloat animationDuration = 0.2;
     //根据动画方向,调整frame
     //目标位置 = 原位置 + 改变量
     if (_animatePin == YCIBadgeAnimatePinLeft) {
-    
+        
     }else if (_animatePin == YCIBadgeAnimatePinCenter){
         frame.origin.x += (self.frame.size.width - frame.size.width)/2;
     }else if (_animatePin == YCIBadgeAnimatePinRight){
@@ -163,7 +169,7 @@ const static CGFloat animationDuration = 0.2;
     
     _textLayer.frame = textFrame;
     UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:tempFrame  cornerRadius:_cornerRadius];
-
+    
     _backgroundLayer.path = path.CGPath;
 }
 
@@ -182,7 +188,7 @@ const static CGFloat animationDuration = 0.2;
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:(str ? str : @"") attributes:@{NSFontAttributeName:_font}];
     CGSize textSize = [attributedString boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
     textSize.width  += widthPadding *2;
-
+    
     textSize.width  = roundf(textSize.width / roundScale) *roundScale;
     textSize.height = roundf(textSize.height / roundScale) *roundScale;
     
@@ -194,6 +200,17 @@ const static CGFloat animationDuration = 0.2;
 }
 
 #pragma mark - ------- interface Method
+
+- (void)showIntValue:(NSInteger)num{
+    
+    NSString *str = [NSString stringWithFormat:@"%@",@(num)];
+    if (num > maxNum) {
+        str = [NSString stringWithFormat:@"%@",@(maxNum)];
+    }
+    
+    [self showText:str];
+    
+}
 - (void)showText:(NSString *)text{
     
     self.hidden = NO;
@@ -218,6 +235,14 @@ const static CGFloat animationDuration = 0.2;
     
     [self hideForZeroIfNeeded];
     
+}
+
+#pragma mark - ------- setter & getter
+
+- (void)setFont:(UIFont *)font{
+    _font = font;
+    _textLayer.font = (__bridge CFTypeRef)(_font.fontName);
+    _textLayer.fontSize = font.pointSize;
 }
 
 

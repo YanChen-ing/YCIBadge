@@ -23,7 +23,6 @@ typedef NS_ENUM(NSUInteger, YCIBadgeAnimatePin){
 @property (nonatomic,       ) YCIBadgeAnimatePin animatePin;
 
 /**@name Text*/
-@property (nonatomic, strong) NSString *text;
 @property (nonatomic, strong) UIColor  *textColor;
 @property (nonatomic, strong) UIFont   *font;
 
@@ -34,6 +33,10 @@ typedef NS_ENUM(NSUInteger, YCIBadgeAnimatePin){
 @property (nonatomic,       ) CGFloat maximumWidth;
 @property (nonatomic,       ) BOOL    hidesWhenZero;
 
+
 - (void)showText:(NSString *)text;
+- (void)showIntValue:(NSInteger)num;
+
+
 
 @end
